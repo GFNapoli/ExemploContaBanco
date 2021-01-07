@@ -1,10 +1,12 @@
 package com.zup.account.bank.demo.service;
 
 import com.zup.account.bank.demo.entitie.Account;
+import com.zup.account.bank.demo.exception.AccountRequestException;
 import com.zup.account.bank.demo.repository.AccountRepository;
 import com.zup.account.bank.demo.request.AccountRequest;
 import com.zup.account.bank.demo.response.AccountResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,10 +19,10 @@ public class AccountService {
 
     public AccountResponse create(AccountRequest accountRequest){
         if(accountRepository.findByCpf(accountRequest.getCpf()) != null){
-            throw new RuntimeException("CPF already exists in the database");
+            throw new AccountRequestException("CPF already exists in the database", HttpStatus.UNPROCESSABLE_ENTITY);
         }
         if(accountRepository.findByMail(accountRequest.getMail()) != null){
-            throw new RuntimeException("E-mail already exists in the database");
+            throw new AccountRequestException("E-mail already exists in the database", HttpStatus.I_AM_A_TEAPOT);
         }
 
         Account account = new Account();
